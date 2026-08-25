@@ -1,0 +1,8 @@
+# Install as ~/.codex/cpo-daily.config.toml and launch with: codex --profile cpo-daily
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 4
+interrupt_message = true
