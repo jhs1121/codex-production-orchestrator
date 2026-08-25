@@ -1,0 +1,6 @@
+interface:
+  display_name: "Codex Production Orchestrator"
+  short_description: "Fast coding orchestration without validation ceremony"
+  default_prompt: "Use $codex-production-orchestrator automatically for this repository task. Keep work packages bounded, preserve existing changes, avoid redundant verification, and use focused validation."
+policy:
+  allow_implicit_invocation: true
