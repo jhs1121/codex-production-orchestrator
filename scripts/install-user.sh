@@ -2,16 +2,17 @@
 set -euo pipefail
 
 SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SKILL_DST="$HOME/.agents/skills/codex-production-orchestrator"
+SKILL_ROOT="$HOME/.agents/skills"
+SKILL_DST="$SKILL_ROOT/codex-production-orchestrator"
 AGENT_DST="$HOME/.codex/agents"
 PROFILE_DST="$HOME/.codex"
 DEFAULT_AUTO=false
 
 usage() {
   cat <<'USAGE'
-Usage: ./scripts/install-user.sh [--default-auto|--default-daily]
+Usage: bash scripts/install-user.sh [--default-auto|--default-daily]
 
-Installs the Skill, custom agents, and three optional CLI profiles.
+Installs the Skill, custom agents, and optional CLI profiles.
 --default-auto adds an idempotent managed block to ~/.codex/AGENTS.md so
 non-trivial coding tasks automatically use the orchestrator. --default-daily is
 kept as a backwards-compatible alias.
@@ -26,7 +27,27 @@ for arg in "$@"; do
   esac
 done
 
-mkdir -p "$SKILL_DST" "$AGENT_DST" "$PROFILE_DST"
+check_broken_symlink() {
+  local path="$1"
+  if [[ -L "$path" && ! -e "$path" ]]; then
+    printf 'Install blocked: %s is a broken symbolic link.\n' "$path" >&2
+    printf 'Inspect it with: ls -ld %q\n' "$path" >&2
+    printf 'If you no longer need that link, remove it with: rm %q\n' "$path" >&2
+    printf 'Then run: bash install.sh\n' >&2
+    exit 1
+  fi
+}
+
+# mkdir -p normally creates all missing parents. Explicitly detect broken links,
+# because a dangling ~/.agents or ~/.agents/skills makes mkdir report a confusing
+# "No such file or directory" error on macOS.
+check_broken_symlink "$HOME/.agents"
+check_broken_symlink "$SKILL_ROOT"
+check_broken_symlink "$HOME/.codex"
+check_broken_symlink "$AGENT_DST"
+
+mkdir -p "$SKILL_ROOT" "$SKILL_DST" "$AGENT_DST" "$PROFILE_DST"
+
 cp -R "$SRC_DIR/skill/codex-production-orchestrator/." "$SKILL_DST/"
 cp "$SRC_DIR/agents/"*.toml "$AGENT_DST/"
 cp "$SRC_DIR/profiles/"*.config.toml "$PROFILE_DST/"
