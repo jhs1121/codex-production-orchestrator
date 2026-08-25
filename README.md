@@ -7,9 +7,9 @@ Chinese quick start: [README.zh-CN.md](README.zh-CN.md)
 ## Quick start
 
 ```bash
-git clone git@github.com:jhs1121/codex-production-orchestrator.git
+git clone https://github.com/jhs1121/codex-production-orchestrator.git
 cd codex-production-orchestrator
-./install.sh
+bash install.sh
 ```
 
 Restart Codex after installation. Then use Codex normally; no mode flag is required for day-to-day work.
@@ -46,7 +46,7 @@ To explicitly force all-Sol execution, ask for it or invoke `MODE=ALL_SOL`.
 
 ```bash
 git pull
-./install.sh
+bash install.sh
 ```
 
 Then restart Codex.
@@ -54,7 +54,7 @@ Then restart Codex.
 ## Validate
 
 ```bash
-./scripts/doctor.sh user
+bash scripts/doctor.sh user
 ```
 
 Advanced explicit overrides remain available: `MODE=DAILY`, `MODE=QUALITY`, `MODE=ALL_SOL`, `MODE=ULTRA`, and `RESUME=TAKEOVER`, but they are not required for normal use.
