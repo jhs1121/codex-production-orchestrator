@@ -5,9 +5,9 @@
 ## 你只需要这样安装
 
 ```bash
-git clone git@github.com:jhs1121/codex-production-orchestrator.git
+git clone https://github.com/jhs1121/codex-production-orchestrator.git
 cd codex-production-orchestrator
-./install.sh
+bash install.sh
 ```
 
 安装完成后 **重启 Codex**。
@@ -47,7 +47,7 @@ Skill 会自动按任务大小处理：
 
 照常用，不需要改命令。
 
-默认策略仍然是：机械、清晰的开发交给 Luna Max；真正需要更强判断的架构、并发、安全、迁移、复杂根因等才升级给 Sol Max 子代理。这样通常比“所有活都让 Sol 做”更划算。
+默认策略仍然是：机械、清晰的开发交给 Luna Max；真正需要更强判断的架构、并发、安全、迁移、复杂根因等才升级给 Sol Max 子代理。
 
 如果你明确想把额度花掉，可以直接告诉 Codex：
 
@@ -55,19 +55,9 @@ Skill 会自动按任务大小处理：
 这个任务全部使用 Sol Max 子代理，不要降级到 Luna。
 ```
 
-Skill 仍会限制重复探索、重复测试和无意义并发。
-
 ## 如果主线程选 Sol Ultra 呢？
 
-也正常用。
-
-Ultra 自己已经会主动使用子代理，因此 Skill 的重点会变成：
-
-- 不再叠第二套总调度器；
-- 子代理不继续套娃派子代理；
-- 不让多个 Agent 重复调查同一个问题；
-- 按 ownership 并行；
-- 最后只做一次有意义的集成 Gate。
+也正常用。Ultra 自己已经会主动使用子代理，因此 Skill 只负责避免第二套总调度器、避免 Agent 套娃、限制重复调查，并保持 ownership 和一次有效最终验证。
 
 ## 更新
 
@@ -76,7 +66,7 @@ Ultra 自己已经会主动使用子代理，因此 Skill 的重点会变成：
 ```bash
 cd codex-production-orchestrator
 git pull
-./install.sh
+bash install.sh
 ```
 
 然后重启 Codex。
@@ -84,7 +74,7 @@ git pull
 ## 检查安装
 
 ```bash
-./scripts/doctor.sh user
+bash scripts/doctor.sh user
 ```
 
 看到：
@@ -98,15 +88,7 @@ Installation OK
 
 ## 高级用法
 
-如果你确实想手动控制，还保留：
-
-- `MODE=DAILY`
-- `MODE=QUALITY`
-- `MODE=ALL_SOL`
-- `MODE=ULTRA`
-- `RESUME=TAKEOVER`
-
-但这些都属于高级覆盖项，**日常不用记**。详见英文 README 与 `skill/.../references/`。
+仍然保留 `MODE=DAILY`、`MODE=QUALITY`、`MODE=ALL_SOL`、`MODE=ULTRA`、`RESUME=TAKEOVER`，但这些属于高级覆盖项，**日常不用记**。
 
 ## 核心原则
 
