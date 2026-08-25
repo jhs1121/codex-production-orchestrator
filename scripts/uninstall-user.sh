@@ -12,7 +12,7 @@ owned_agents=(
   parent-builder.toml parent-specialist.toml parent-verifier.toml
   sol-builder.toml sol-specialist.toml sol-verifier.toml
   ctf-luna-worker.toml ctf-terra-triage.toml ctf-parent-specialist.toml ctf-parent-verifier.toml
-  ctf-tool-builder.toml ctf-fixture-worker.toml ctf-tool-reviewer.toml
+  ctf-tool-builder.toml ctf-fixture-worker.toml ctf-tool-reviewer.toml ctf-eval-auditor.toml
 )
 for name in "${owned_agents[@]}"; do rm -f "$AGENT_DST/$name"; done
 

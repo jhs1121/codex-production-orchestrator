@@ -1,26 +1,40 @@
-# Codex Production Orchestrator v1.1
+# Codex Production Orchestrator v1.1.1
 
 这套工作流同时安装两套可以共存的 Skill：
 
 - `codex-production-orchestrator`：普通开发、修 Bug、重构、集成、任务恢复和最小有效验证；
 - `codex-ctf-orchestrator`：CTF 工具链开发、能力评测，以及明确授权的比赛解题。
 
-## 这次最重要的变化
+## 本次修复：EVAL 改为 Luna-first
 
-CTF 不再只有“解题模式”。现在会自动区分三种工作流：
+TOOLCHAIN / EVAL 的普通子任务现在默认是：
 
 ```text
-TOOLCHAIN  赛前开发自己的 CTF / DFIR / 数据安全 / AI 安全工具
-EVAL       用合成 fixture、公开历史题、盲测集做能力验证
-CHALLENGE  比赛中分析某一道明确授权的题目或目标
+第一轮仓库/能力盘点  → ctf_eval_auditor（Luna Max，只读）
+明确编码和适配器    → Luna Max
+fixture / benchmark  → Luna Max
+聚焦审查             → Luna Max
+Terra 子代理          → 仅证据触发的综合升级
 ```
 
-日常不需要输入模式参数。Codex 会根据“是在改仓库代码，还是在分析具体题目”自动选择。
+仓库多、文件多、任务是只读盘点，都不再自动等于 Terra。只有 Luna 已返回具体冲突或跨领域综合问题，或者你明确要求 Terra 子代理时，才会追加 Terra；普通一轮最多一个 Terra 综合任务。
 
-## 安装或升级
+主控仍由你自己选择。Sol xhigh、Terra Max、Sol Max 或 Sol Ultra 都可以当主控；即使主控是 Terra，明确子任务仍默认交给 Luna。
+
+## 子代理模型怎么确认
+
+主代理派发前必须输出类似：
+
+```text
+Routing: 3 × ctf_eval_auditor (Luna Max, read-only); Terra 仅在 Luna 证据表明需要综合时升级。
+```
+
+这行是预期路由的依据，不再依赖 UI 自动生成的子线程名称猜模型。
+
+## 升级方式
 
 ```bash
-cd codex-production-orchestrator
+cd ~/codex-production-orchestrator
 git pull
 bash install.sh
 bash scripts/doctor.sh user
@@ -28,150 +42,48 @@ bash scripts/doctor.sh user
 
 然后彻底退出 Codex，再重新打开。
 
-## 开发 ctf-workbench、cryptomaster、qzmaster、diskmaster、aimaster 等工具
+## 不需要重新初始化“任务继续”目录
 
-这是 **TOOLCHAIN**，不是 CHALLENGE。
-
-推荐主控：
-
-```text
-一般架构、编码、跨仓库集成：GPT-5.6 Sol xhigh
-大量阅读、能力盘点、fixture/覆盖率分析：GPT-5.6 Terra Max
-很难的算法、根因或关键设计：GPT-5.6 Sol Max
-真正可拆成多个独立模块的大任务：GPT-5.6 Sol Ultra
-```
-
-明确编码、测试、解析器、适配器和 fixture 默认交给 Luna Max。
-
-你只需要正常说：
-
-```text
-继续开发当前 CTF 工具仓库，完成剩余验收条件，不要扩大范围。
-```
-
-Skill 会把它理解成：
-
-```text
-当前主模型 = 唯一主控
-Production Skill = 拆任务、分 ownership、少重复验证
-CTF Skill / TOOLCHAIN = 保持本地、离线、合成/历史题测试和仓库安全边界
-Luna Max = 做明确的实现、fixture 和局部验证
-```
-
-### 建议每个工具仓库只初始化一次
-
-在 `ctf-workbench`、`cryptomaster`、`qzmaster`、`diskmaster`、`aimaster` 等仓库根目录运行：
-
-```bash
-bash ~/codex-production-orchestrator/scripts/init-ctf-tool-repo.sh
-```
-
-会生成：
+你已经生成的：
 
 ```text
 CTF_TOOL_SCOPE.md
 .codex/toolchain-state.md
 ```
 
-`CTF_TOOL_SCOPE.md` 只需要填写一次，说明：
+继续有效。升级后**不需要**再次运行 `init-ctf-tool-repo.sh`。该脚本只在新的工具仓库或新的多仓库父工作区第一次使用时运行一次。
 
-- 仓库是谁维护的、用于什么比赛/教学/DFIR；
-- 允许的本地文件、合成 fixture、公开历史题；
-- 网络默认是否关闭、是否只允许 localhost/local Docker；
-- 允许的解析、解码、求解、只读取证、适配器等能力；
-- 明确禁止真实第三方目标、凭证窃取、隐蔽、持久化、破坏、外传和任意 shell；
-- 测试语料来源、资源上限和“不假报 SUCCESS”的规则。
+## 已暂停的旧 Terra 子代理
 
-这会让父 Agent 和所有子 Agent 都拿到同一份准确背景，减少“父线程知道是比赛工具，子线程只看到 exploit/flag/SQLi 字样”的上下文丢失。
+暂停的子代理不会因为升级自动变成 Luna。升级后不要继续恢复旧的 Terra-first EVAL 线程；已返回的证据可以复用，只把仍缺失的盘点包重新派给 `ctf_eval_auditor`。
 
-## TOOLCHAIN 默认边界
-
-允许的典型工作：
-
-- 解析器、解码器、密码求解器处理用户提供的本地数据；
-- PCAP/日志/磁盘/内存/Office/模型导出等只读分析；
-- sibling adapter、safe argv、契约、证据链和 verifier；
-- 本地 CLI/GUI/loopback API；
-- 合成 fixture、公开历史题回归、盲测和 false-positive gate；
-- 包装、安装、跨平台、资源限制和稳定性修复。
-
-默认不能悄悄扩成：
-
-- 未列明远程目标扫描或利用；
-- 从不可信输入执行任意 shell / plugin / `eval` / `exec`；
-- 凭证窃取或使用、隐蔽、持久化、自传播；
-- 破坏、拒绝服务、真实数据外传；
-- 为了通过安全检查而改写、编码、拆分或隐藏真实意图。
-
-一个新功能如果会突破仓库边界，Worker 应返回 `SCOPE_REVIEW_REQUIRED`，而不是偷偷实现。
-
-## 具体比赛解题
-
-这是 **CHALLENGE**。
-
-推荐主控：
+可直接对主代理说：
 
 ```text
-一般题、取证、大量附件：Terra Max
-特别模糊、跨领域难题：Sol Max
-大型可并行题：Sol Ultra
+继续当前 EVAL。不要恢复旧的 Terra-first 子线程。
+复用已有证据，只把仍缺失的仓库/能力切片派给 ctf_eval_auditor（Luna Max，只读）。
+不要从头重扫，不读取 oracle/答案/题解，不访问网络。
 ```
 
-直接说：
+## 三种 CTF 工作流
 
 ```text
-这是主办方明确授权的 CTF，只分析提供的题目文件、本地环境和我列出的比赛目标。请使用 CTF orchestrator，并保留阶段状态。
+TOOLCHAIN  开发自己的 CTF / DFIR / 数据安全 / AI 安全工具
+EVAL       合成 fixture、公开历史题、盲测和真实能力验证
+CHALLENGE  分析某一道明确授权的比赛题目或目标
 ```
 
-涉及远程比赛目标时，在题目目录运行：
-
-```bash
-bash ~/codex-production-orchestrator/scripts/init-ctf-workspace.sh
-```
-
-填写 `CTF_SCOPE.md` 中的精确域名/IP/端口、比赛时间和禁止范围。
-
-## 工具能力评测
-
-这是 **EVAL**。
-
-优先顺序：
-
-1. 小型合成 fixture；
-2. 公开且已经结束的历史赛题；
-3. 独立盲测集；
-4. 可选本地依赖 smoke。
-
-必须区分 mock/scripted、NOT_RUN、PARTIAL 和真实 E2E；solver 不得读取 oracle/答案文件，也不要把真实密钥、PII 或生产日志放进测试集。
-
-## 安全预警能不能彻底避免
-
-不能保证。Skill 的作用是：
-
-- 准确区分“开发自己仓库”和“对具体目标操作”；
-- 把本地/离线/fixture/网络边界传给每个子 Agent；
-- 遇到阻断时保存进度，而不是让 Sol 整个调度树报废；
-- 不通过换词、编码、拆分或换 Agent 去绕过检查。
-
-如果一项明确的本地、授权开发工作仍然被反复误拦，应记录准确提示、模型、Codex/ChatGPT/API 界面、时间和 request ID，通过官方反馈/Support 处理。个人也可以申请 Trusted Access for Cyber，但获批并不代表所有安全检查都会消失。
-
-## 长上下文与暂停
+## 主模型建议
 
 ```text
-普通开发：.codex/task-state.md
-工具链开发：.codex/toolchain-state.md
-具体解题：.codex/ctf-state.md
+一般工具开发、跨仓库集成：Sol xhigh
+你明确希望 Terra 负责主控综合：Terra Max
+困难算法、根因、关键设计：Sol Max
+真正可拆成独立模块的大任务：Sol Ultra
 ```
 
-只在大阶段完成、切模型、准备暂停、上下文压缩、安全/范围中断和最终集成前更新；不每改一行就写状态。
+无论主控选谁，普通 Builder、EVAL auditor、fixture 和 reviewer 都默认 Luna Max。
 
-## 更新
+## 安全边界
 
-```bash
-cd codex-production-orchestrator
-git pull
-bash install.sh
-bash scripts/doctor.sh user
-```
-
-然后重启 Codex。
+TOOLCHAIN / EVAL 默认只使用你维护的代码、本地文件、合成 fixture、已结束的公开历史题，以及明确允许的 localhost / 本地 Docker / VM。仓库所有权只授权代码修改和本地测试，不授权任何未列明远程目标，也不会通过换词、编码、拆分或换 Agent 绕过安全检查。

@@ -57,15 +57,23 @@ If it is unclear whether the task is tool development or a live challenge, defau
 
 ## Coordinator and model routing
 
-Respect the user's current primary model and reasoning effort. Never force a model switch.
+Respect the user's current primary model and reasoning effort. Never force a model switch. Coordinator selection and leaf selection are separate decisions.
 
-Recommended patterns:
+Recommended coordinators:
 
 - **Sol xhigh**: normal tool architecture, implementation planning, and multi-repository integration.
-- **Terra Max**: read-heavy capability audits, large fixture/corpus mapping, forensics, and ordinary challenge triage.
+- **Terra Max**: user-selected read-heavy coordination, forensics, corpus planning, and ordinary challenge triage.
 - **Sol Max**: ambiguous algorithm design, difficult cross-domain reasoning, stubborn root causes, or critical final review.
 - **Sol Ultra**: large work with genuinely independent modules; use native delegation as the only orchestration layer.
-- **Luna Max**: clear bounded implementation, fixture creation, parsers, tests, adapters, and local experiments.
+
+Leaf policy for TOOLCHAIN/EVAL is **Luna-first**:
+
+- use Luna Max for explicit bounded implementation, fixtures, parsers, tests, adapters, local experiments, repository inventories, first-pass coverage audits, and evidence classification;
+- do not spawn Terra merely because a repository is large, the task is read-only, or several repositories must be audited;
+- split first-pass audits into bounded Luna slices and reuse their compact handoffs;
+- use at most one Terra synthesis leaf only after a Luna handoff identifies a concrete contradictory, cross-domain, or interdependent question, or when the user explicitly requests Terra leaves.
+
+Before spawning workers, state one compact routing line with role, model class, count, and escalation rule. Do not rely on the UI task title to reveal the model.
 
 Suggest escalation only after evidence shows the current route is insufficient.
 
@@ -105,8 +113,11 @@ Every CHALLENGE child receives the same envelope. Never delegate only “get fla
 - `ctf_tool_builder`: one bounded implementation package in an owned local/offline tool repository.
 - `ctf_fixture_worker`: one deterministic synthetic fixture, benchmark case, or regression-test package.
 - `ctf_tool_reviewer`: one focused read-only review for scope drift, unsafe defaults, resource bounds, false-success risk, or integration-contract defects.
-- `terra_explorer`: read-heavy repository/capability mapping when a Luna lookup is insufficient.
+- `ctf_eval_auditor`: default first-pass read-only audit for one repository or capability slice; pinned Luna Max.
+- `terra_explorer`: one evidence-backed synthesis or exceptional large-artifact mapping task after Luna is insufficient; normally no more than one per wave.
 - `parent_specialist` or `parent_verifier`: one difficult design/root-cause/review question using the current coordinator model, always with the full TOOL_SCOPE.
+
+For a multi-repository EVAL, default to parallel `ctf_eval_auditor` leaves, not parallel Terra explorers. A Luna auditor may return `TERRA_SYNTHESIS_NEEDED` only with the exact unresolved synthesis question.
 
 ### CHALLENGE leaves
 
@@ -116,6 +127,16 @@ Every CHALLENGE child receives the same envelope. Never delegate only “get fla
 - `ctf_parent_verifier`: verify one final derivation, exploit path, or flag evidence.
 
 Generic Production leaves may be used only when they receive the relevant full TOOL_SCOPE or AUTH_SCOPE packet.
+
+## Routing disclosure
+
+Before dispatching any wave, print one short line, for example:
+
+```text
+Routing: 3 × ctf_eval_auditor (Luna Max, read-only); Terra escalation only if a Luna handoff returns a concrete synthesis blocker.
+```
+
+If the route changes, state the evidence-backed reason before spawning the stronger leaf. This visible disclosure is the source of truth for the intended route; UI thread names may be auto-generated.
 
 ## Toolchain engineering rules
 

@@ -1,6 +1,6 @@
 interface:
   display_name: "Codex CTF Orchestrator"
-  short_description: "Authorized CTF toolchain development, evaluation, and challenge routing"
-  default_prompt: "Use $codex-ctf-orchestrator. Select TOOLCHAIN for owned CTF/DFIR tool development, EVAL for synthetic or public-historical capability testing, and CHALLENGE only for a specific explicitly authorized challenge. Propagate the complete scope contract to every leaf, preserve durable checkpoints, and never evade safety controls."
+  short_description: "Authorized CTF toolchain development, Luna-first evaluation, and challenge routing"
+  default_prompt: "Use $codex-ctf-orchestrator. Select TOOLCHAIN for owned CTF/DFIR tool development, EVAL for synthetic or public-historical capability testing, and CHALLENGE only for a specific explicitly authorized challenge. In TOOLCHAIN/EVAL, use Luna Max for bounded first-pass work and audits; use Terra leaves only after an evidence-backed synthesis need or explicit user request. Announce the intended role/model count before dispatch, propagate the complete scope contract to every leaf, preserve durable checkpoints, and never evade safety controls."
 policy:
   allow_implicit_invocation: true

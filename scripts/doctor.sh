@@ -41,7 +41,7 @@ agents=(
   parent-builder.toml parent-specialist.toml parent-verifier.toml
   sol-builder.toml sol-specialist.toml sol-verifier.toml
   ctf-luna-worker.toml ctf-terra-triage.toml ctf-parent-specialist.toml ctf-parent-verifier.toml
-  ctf-tool-builder.toml ctf-fixture-worker.toml ctf-tool-reviewer.toml
+  ctf-tool-builder.toml ctf-fixture-worker.toml ctf-tool-reviewer.toml ctf-eval-auditor.toml
 )
 for name in "${agents[@]}"; do required+=("$AGENT_DIR/$name"); done
 
@@ -58,6 +58,7 @@ grep -q '^name: codex-production-orchestrator$' "$SKILL_ROOT/codex-production-or
 grep -q '^name: codex-ctf-orchestrator$' "$SKILL_ROOT/codex-ctf-orchestrator/SKILL.md"
 grep -q 'TOOLCHAIN' "$SKILL_ROOT/codex-ctf-orchestrator/SKILL.md"
 grep -q 'CHALLENGE' "$SKILL_ROOT/codex-ctf-orchestrator/SKILL.md"
+grep -q 'Luna-first' "$SKILL_ROOT/codex-ctf-orchestrator/SKILL.md"
 printf 'Skills OK\n'
 
 python3 - "$AGENT_DIR" "$PROFILE_DIR" <<'PY_CHECK'
@@ -85,6 +86,7 @@ pinned = {
     "ctf-tool-builder.toml": ("gpt-5.6-luna", "max", "workspace-write"),
     "ctf-fixture-worker.toml": ("gpt-5.6-luna", "max", "workspace-write"),
     "ctf-tool-reviewer.toml": ("gpt-5.6-luna", "max", "read-only"),
+    "ctf-eval-auditor.toml": ("gpt-5.6-luna", "max", "read-only"),
 }
 unpinned = {
     "parent-builder.toml": "workspace-write",

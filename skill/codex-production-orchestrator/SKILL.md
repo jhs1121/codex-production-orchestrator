@@ -49,12 +49,14 @@ Use the smallest capable leaf:
 - `luna_builder`: clear bounded implementation.
 - `luna_explorer`: narrow read-only lookup.
 - `luna_verifier`: one focused low/medium-risk verification.
-- `terra_explorer`: purposeful read-heavy exploration or large-artifact mapping.
+- `terra_explorer`: evidence-backed synthesis or exceptional large-artifact mapping after a bounded Luna pass is insufficient; not the default for read-only audits.
 - `parent_builder`, `parent_specialist`, `parent_verifier`: only when coordinator-level judgment materially helps.
 - explicit `sol_*`: only for backward compatibility or an explicit all-Sol request.
-- `ctf_tool_builder`, `ctf_fixture_worker`, `ctf_tool_reviewer`: when the CTF Skill selects TOOLCHAIN/EVAL and provides the full TOOL_SCOPE.
+- `ctf_tool_builder`, `ctf_fixture_worker`, `ctf_tool_reviewer`, `ctf_eval_auditor`: when the CTF Skill selects TOOLCHAIN/EVAL and provides the full TOOL_SCOPE.
 
 Parent-model agents intentionally do not pin a model. When exact inheritance matters, spawn them explicitly with the current primary model and effort so user-level agent defaults cannot silently change the route.
+
+For TOOLCHAIN/EVAL, bounded first-pass reading and coverage audits are Luna work by default. Large file count alone is not a Terra escalation reason. Before spawning a wave, state the intended roles/models/count in one compact line.
 
 ## Execution
 

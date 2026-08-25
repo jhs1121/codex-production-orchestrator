@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 — 2026-08-25
+
+- Made TOOLCHAIN/EVAL leaf routing Luna-first, including first-pass read-only capability audits.
+- Added `ctf_eval_auditor`, a pinned Luna Max read-only evidence auditor.
+- Added an evidence gate for Terra escalation and limited ordinary EVAL waves to at most one Terra synthesis leaf.
+- Required a compact routing disclosure before worker dispatch so intended role/model/count is visible without relying on UI titles.
+- Clarified that upgrading does not require reinitializing existing CTF tool workspaces.
+
 ## 1.1.0 — 2026-08-25
 
 - Added automatic CTF workflows: `TOOLCHAIN`, `EVAL`, and `CHALLENGE`.

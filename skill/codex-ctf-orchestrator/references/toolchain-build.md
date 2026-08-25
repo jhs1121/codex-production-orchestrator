@@ -55,14 +55,33 @@ A feature requires explicit scope review when it introduces or materially expand
 
 Return `SCOPE_REVIEW_REQUIRED` with the proposed capability, default behavior, bounds, and safer alternative. Do not hide the change inside a generic refactor.
 
+## Luna-first EVAL routing
+
+A first-pass capability audit is a bounded evidence-collection task, not automatically a Terra task.
+
+Default route:
+
+1. split repositories or capability families into the fewest non-overlapping slices;
+2. assign each slice to `ctf_eval_auditor` (Luna Max, read-only);
+3. collect compact evidence-tier handoffs;
+4. let the primary synthesize the matrix;
+5. use at most one `terra_explorer` only when a Luna handoff identifies a concrete contradictory or cross-domain synthesis problem.
+
+Do not spawn several Terra explorers merely because the workspace contains several repositories. File volume alone is not an escalation reason. A user-selected Terra primary may still coordinate Luna first-pass auditors.
+
+Before dispatch, announce the actual roles and models in one line. Thread titles are helpful but are not treated as authoritative model telemetry.
+
 ## Evaluation gates
 
 A useful benchmark separates:
 
+- declared/static capability;
 - synthetic unit/regression fixtures;
+- scripted/mock execution;
+- real executable or dependency-backed execution;
 - public historical development cases;
 - blind held-out cases;
 - optional local dependency tests;
-- unsupported or not-run results.
+- unsupported, partial, unknown, or not-run results.
 
 Never label scripted/mock execution as a real end-to-end success. Never use answer files or hidden oracles in solver code.

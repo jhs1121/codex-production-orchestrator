@@ -48,7 +48,7 @@ owned_agents=(
   parent-builder.toml parent-specialist.toml parent-verifier.toml
   sol-builder.toml sol-specialist.toml sol-verifier.toml
   ctf-luna-worker.toml ctf-terra-triage.toml ctf-parent-specialist.toml ctf-parent-verifier.toml
-  ctf-tool-builder.toml ctf-fixture-worker.toml ctf-tool-reviewer.toml
+  ctf-tool-builder.toml ctf-fixture-worker.toml ctf-tool-reviewer.toml ctf-eval-auditor.toml
 )
 for name in "${owned_agents[@]}"; do rm -f "$AGENT_DST/$name"; done
 cp "$SRC_DIR/agents/"*.toml "$AGENT_DST/"
@@ -79,9 +79,9 @@ if "$DEFAULT_AUTO"; then
   cat >> "$TMP_FILE" <<'CPO_MANAGED'
 
 <!-- BEGIN CPO V1 MANAGED DEFAULTS -->
-For non-trivial engineering work, use codex-production-orchestrator. Respect the user's current primary model and reasoning effort; never force Sol or another model. Use pinned Luna Max leaves for clear bounded work, Terra Max for purposeful read-heavy exploration, and parent-model leaves only when stronger coordinator-level judgment materially helps. Keep one coordinator layer; Ultra uses native delegation without a nested coordinator. Preserve existing work, assign non-overlapping ownership, avoid ritual SHA/checksum and unchanged test loops, and checkpoint only at meaningful boundaries.
+For non-trivial engineering work, use codex-production-orchestrator. Respect the user's current primary model and reasoning effort; never force Sol or another model. Use pinned Luna Max leaves for clear bounded work and first-pass read-only audits. Use Terra Max leaves only after an evidence-backed Luna handoff identifies a concrete synthesis problem, for an exceptional large-artifact mapping task, or when the user explicitly requests Terra leaves. Large repository size or read-only work alone is not an escalation reason. Keep one coordinator layer; Ultra uses native delegation without a nested coordinator. Before dispatch, state one compact routing line with role, model class, count, and escalation rule. Preserve existing work, assign non-overlapping ownership, avoid ritual SHA/checksum and unchanged test loops, and checkpoint only at meaningful boundaries.
 
-For an owned CTF/DFIR/security tool repository, also use codex-ctf-orchestrator in TOOLCHAIN or EVAL workflow. Treat this as local/offline software development: derive TOOL_SCOPE from CTF_TOOL_SCOPE.md, README, AGENTS.md, repository ownership, and the request; use synthetic, supplied local, or public historical fixtures; default network access off except explicit loopback/local-container tests; and do not infer remote-target authorization from repository ownership.
+For an owned CTF/DFIR/security tool repository, also use codex-ctf-orchestrator in TOOLCHAIN or EVAL workflow. Treat this as local/offline software development: derive TOOL_SCOPE from CTF_TOOL_SCOPE.md, README, AGENTS.md, repository ownership, and the request; use synthetic, supplied local, or public historical fixtures; default network access off except explicit loopback/local-container tests; and do not infer remote-target authorization from repository ownership. In EVAL, use ctf_eval_auditor (Luna Max, read-only) for bounded first-pass repository/capability slices; normally use at most one Terra synthesis leaf after Luna evidence justifies it.
 
 For a specific organizer-authorized CTF challenge, supplied artifact/target, localhost, or owned local Docker/VM lab, use CHALLENGE workflow. The CTF Skill owns AUTH_SCOPE and exact target boundaries; Production owns execution discipline. Propagate the complete relevant scope packet to every child. Never evade a safety/scope block through euphemism, rewording, encoding, fragmentation, obfuscation, or another agent; checkpoint and continue only safe in-scope work.
 <!-- END CPO V1 MANAGED DEFAULTS -->
