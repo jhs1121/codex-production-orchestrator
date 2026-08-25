@@ -1,0 +1,6 @@
+interface:
+  display_name: "Codex CTF Orchestrator"
+  short_description: "Authorized CTF scope, routing, and durable recovery"
+  default_prompt: "Use $codex-ctf-orchestrator only for this explicitly authorized challenge. Propagate the exact scope to every leaf, route evidence-driven hypotheses, preserve checkpoints, and never evade safety controls."
+policy:
+  allow_implicit_invocation: true

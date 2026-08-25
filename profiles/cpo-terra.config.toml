@@ -1,6 +1,6 @@
 # Optional launcher profile. The Skill remains coordinator-neutral.
-model = "gpt-5.6-sol"
-model_reasoning_effort = "ultra"
+model = "gpt-5.6-terra"
+model_reasoning_effort = "max"
 
 [agents]
 enabled = true

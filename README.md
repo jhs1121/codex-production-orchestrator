@@ -1,46 +1,66 @@
-# Codex Production Orchestrator v0.3
+# Codex Production Orchestrator v1.0
 
-A high-throughput Codex Skill designed to maximize useful engineering output while suppressing redundant searching, repeated full-suite testing, checksum ceremony, duplicated agent work, and unnecessary orchestration overhead.
+A stable, coordinator-neutral Codex workflow with two composable Skills:
 
-Chinese quick start: [README.zh-CN.md](README.zh-CN.md)
+- `codex-production-orchestrator` for engineering execution;
+- `codex-ctf-orchestrator` for explicitly authorized CTF challenges and local labs.
 
-## Quick start
+The CTF Skill owns authorization scope, challenge routing, and interruption recovery. The Production Skill owns task sizing, non-overlapping ownership, agent routing, and focused validation.
+
+Chinese guide: [README.zh-CN.md](README.zh-CN.md)
+
+## Install / upgrade
 
 ```bash
 git clone https://github.com/jhs1121/codex-production-orchestrator.git
 cd codex-production-orchestrator
 bash install.sh
+bash scripts/doctor.sh user
 ```
 
-Restart Codex after installation. Then use Codex normally; no mode flag is required for day-to-day work.
+Restart Codex after installation.
 
-Recommended baseline:
+## Normal use
+
+No mode flag is required. The user's currently selected primary model remains the sole coordinator.
+
+Recommended starting points:
+
+- normal engineering: GPT-5.6 Sol xhigh;
+- read-heavy CTF, forensics, artifact triage: GPT-5.6 Terra Max;
+- highly ambiguous or difficult work: GPT-5.6 Sol Max;
+- genuinely decomposable large work: GPT-5.6 Sol Ultra.
+
+Pinned Luna Max leaves handle clear bounded work. Parent-model leaves are unpinned and are used only when stronger coordinator-level judgment materially helps. Ultra uses one orchestration layer.
+
+## Resume
 
 ```text
-Main session: GPT-5.6 Sol xhigh
-Leaf implementation: GPT-5.6 Luna Max
+Continue the current task. Preserve existing changes, conclusions, and validation evidence. Do not restart from zero.
 ```
 
-The Skill auto-sizes orchestration, keeps ownership non-overlapping, escalates to Sol only when stronger judgment is useful, reuses existing evidence, and uses the narrowest validation that can falsify a change.
-
-## Resume existing work
-
-After reopening an old task, say:
+## Authorized CTF
 
 ```text
-Continue this task using production orchestrator. Preserve the current changes and do not restart from zero.
+This is an organizer-authorized CTF. Work only on the supplied artifacts, local lab, and the exact competition targets I list. Use the CTF orchestrator and keep durable checkpoints.
 ```
 
-The takeover workflow inventories the current worktree and continues only remaining acceptance criteria.
+For remote targets, initialize and fill `CTF_SCOPE.md`:
 
-## Main session on Sol Max or Ultra
+```bash
+bash scripts/init-ctf-workspace.sh
+```
 
-No special command is required. Auto mode adapts its policy:
+A safety or scope block is checkpointed and not retried through rewording, encoding, fragmentation, or another agent.
 
-- Sol Max: keep clear implementation on Luna; use Sol leaf agents only on the critical path.
-- Sol Ultra: do not build a second autonomous coordinator hierarchy; keep delegation one layer deep and ownership-based.
+## Optional profiles
 
-To explicitly force all-Sol execution, ask for it or invoke `MODE=ALL_SOL`.
+```bash
+codex --profile cpo-daily
+codex --profile cpo-terra
+codex --profile cpo-quality
+codex --profile cpo-ultra
+```
 
 ## Update
 
@@ -48,13 +68,3 @@ To explicitly force all-Sol execution, ask for it or invoke `MODE=ALL_SOL`.
 git pull
 bash install.sh
 ```
-
-Then restart Codex.
-
-## Validate
-
-```bash
-bash scripts/doctor.sh user
-```
-
-Advanced explicit overrides remain available: `MODE=DAILY`, `MODE=QUALITY`, `MODE=ALL_SOL`, `MODE=ULTRA`, and `RESUME=TAKEOVER`, but they are not required for normal use.

@@ -1,4 +1,4 @@
-# Install as ~/.codex/cpo-quality.config.toml and launch with: codex --profile cpo-quality
+# Optional launcher profile. The Skill remains coordinator-neutral.
 model = "gpt-5.6-sol"
 model_reasoning_effort = "max"
 
