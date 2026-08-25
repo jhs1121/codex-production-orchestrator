@@ -10,6 +10,13 @@ The selected primary model remains the coordinator.
 - Sol Ultra: large work with genuinely independent branches; one orchestration layer only.
 - Future models: keep the same coordinator-neutral contract and route by capability, not hard-coded family name.
 
+## CTF toolchain patterns
+
+- Sol xhigh: normal tool architecture, integration, and release coordination.
+- Terra Max: read-heavy coverage audits, large fixture/corpus mapping, and forensic parser review.
+- Sol Max: difficult solver design, ambiguous algorithm choices, or critical boundary review.
+- Luna Max: bounded implementation, fixtures, adapters, and focused tests.
+
 ## Leaves
 
 Pinned leaves:

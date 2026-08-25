@@ -1,6 +1,6 @@
 ---
 name: codex-production-orchestrator
-description: Coordinator-neutral, high-throughput Codex orchestration for non-trivial feature work, bug fixing, refactors, migrations, tool development, and paused-task takeover. Use when work benefits from bounded agents, non-overlapping ownership, durable checkpoints, focused validation, and suppression of redundant searching, testing, hashing, or nested orchestration. May compose with codex-ctf-orchestrator for explicitly authorized CTF work.
+description: Coordinator-neutral, high-throughput Codex orchestration for non-trivial feature work, bug fixing, refactors, migrations, tool development, and paused-task takeover. Use when work benefits from bounded agents, non-overlapping ownership, durable checkpoints, focused validation, and suppression of redundant searching, testing, hashing, or nested orchestration. May compose with codex-ctf-orchestrator for owned CTF/DFIR toolchain development, evaluation, or explicitly authorized challenge work.
 ---
 
 # Codex Production Orchestrator
@@ -52,6 +52,7 @@ Use the smallest capable leaf:
 - `terra_explorer`: purposeful read-heavy exploration or large-artifact mapping.
 - `parent_builder`, `parent_specialist`, `parent_verifier`: only when coordinator-level judgment materially helps.
 - explicit `sol_*`: only for backward compatibility or an explicit all-Sol request.
+- `ctf_tool_builder`, `ctf_fixture_worker`, `ctf_tool_reviewer`: when the CTF Skill selects TOOLCHAIN/EVAL and provides the full TOOL_SCOPE.
 
 Parent-model agents intentionally do not pin a model. When exact inheritance matters, spawn them explicitly with the current primary model and effort so user-level agent defaults cannot silently change the route.
 
@@ -89,4 +90,10 @@ Maintain `.codex/task-state.md` only at meaningful pause, model-switch, compacti
 
 ## Composition with CTF
 
-For an explicitly authorized CTF, `codex-ctf-orchestrator` owns scope, target boundaries, challenge hypotheses, and safety-aware recovery. This Skill owns sizing, ownership, worker economy, and validation. The CTF constraints always narrow what Production orchestration may do.
+`codex-ctf-orchestrator` may select one of three workflows:
+
+- TOOLCHAIN: owned repository development and local testing;
+- EVAL: synthetic/public-historical capability evaluation;
+- CHALLENGE: one explicitly authorized challenge or target.
+
+The CTF Skill owns TOOL_SCOPE/AUTH_SCOPE, corpus/target boundaries, challenge hypotheses, and safety-aware recovery. This Skill owns sizing, ownership, worker economy, and validation. The CTF constraints always narrow what Production orchestration may do. Repository ownership authorizes code changes and local tests, not remote systems.

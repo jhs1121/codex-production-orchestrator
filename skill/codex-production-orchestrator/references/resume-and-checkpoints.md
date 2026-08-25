@@ -29,3 +29,12 @@ Last updated:
 ```
 
 Keep it short, factual, and disposable. Do not record chain-of-thought. Do not update after every edit.
+
+## Composed CTF checkpoints
+
+When `codex-ctf-orchestrator` is active, use the domain checkpoint instead of duplicating state:
+
+- TOOLCHAIN/EVAL: `.codex/toolchain-state.md`;
+- CHALLENGE: `.codex/ctf-state.md`.
+
+Production orchestration may reference these files but should not create a second competing ledger for the same work.

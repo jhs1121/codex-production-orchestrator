@@ -1,13 +1,21 @@
-# Codex Production Orchestrator v1.0
+# Codex Production Orchestrator v1.1
 
-A stable, coordinator-neutral Codex workflow with two composable Skills:
+A coordinator-neutral Codex workflow with two composable Skills:
 
 - `codex-production-orchestrator` for engineering execution;
-- `codex-ctf-orchestrator` for explicitly authorized CTF challenges and local labs.
-
-The CTF Skill owns authorization scope, challenge routing, and interruption recovery. The Production Skill owns task sizing, non-overlapping ownership, agent routing, and focused validation.
+- `codex-ctf-orchestrator` for owned CTF/DFIR toolchain development, evaluation, and explicitly authorized challenge work.
 
 Chinese guide: [README.zh-CN.md](README.zh-CN.md)
+
+## CTF workflows
+
+The CTF Skill automatically distinguishes:
+
+- `TOOLCHAIN`: develop, integrate, package, and harden an owned local/offline CTF or defensive-security tool;
+- `EVAL`: synthetic/public-historical fixtures, regression gates, blind evaluation, and capability measurement;
+- `CHALLENGE`: one explicitly authorized organizer challenge, local lab, supplied artifact set, or exact target.
+
+No mode flag is required for normal use.
 
 ## Install / upgrade
 
@@ -20,51 +28,43 @@ bash scripts/doctor.sh user
 
 Restart Codex after installation.
 
-## Normal use
+## Toolchain development
 
-No mode flag is required. The user's currently selected primary model remains the sole coordinator.
+Recommended coordinators:
 
-Recommended starting points:
+- Sol xhigh: normal architecture, coding, and multi-repository integration;
+- Terra Max: read-heavy capability audits and corpus/fixture mapping;
+- Sol Max: difficult algorithm or root-cause work;
+- Sol Ultra: large work with genuinely independent modules.
 
-- normal engineering: GPT-5.6 Sol xhigh;
-- read-heavy CTF, forensics, artifact triage: GPT-5.6 Terra Max;
-- highly ambiguous or difficult work: GPT-5.6 Sol Max;
-- genuinely decomposable large work: GPT-5.6 Sol Ultra.
+Pinned Luna Max leaves handle bounded implementation, fixtures, and focused review.
 
-Pinned Luna Max leaves handle clear bounded work. Parent-model leaves are unpinned and are used only when stronger coordinator-level judgment materially helps. Ultra uses one orchestration layer.
+Initialize an owned tool repository once:
 
-## Resume
-
-```text
-Continue the current task. Preserve existing changes, conclusions, and validation evidence. Do not restart from zero.
+```bash
+bash ~/codex-production-orchestrator/scripts/init-ctf-tool-repo.sh
 ```
 
-## Authorized CTF
+This creates `CTF_TOOL_SCOPE.md` and `.codex/toolchain-state.md`. Repository ownership authorizes code changes and local tests; it does not authorize remote systems. Network access is off by default, with explicit loopback/local-container exceptions. A non-loopback target requires a separate exact `CTF_SCOPE.md` and CHALLENGE workflow.
+
+## Challenge work
 
 ```text
 This is an organizer-authorized CTF. Work only on the supplied artifacts, local lab, and the exact competition targets I list. Use the CTF orchestrator and keep durable checkpoints.
 ```
 
-For remote targets, initialize and fill `CTF_SCOPE.md`:
+For remote targets:
 
 ```bash
-bash scripts/init-ctf-workspace.sh
+bash ~/codex-production-orchestrator/scripts/init-ctf-workspace.sh
 ```
 
-A safety or scope block is checkpointed and not retried through rewording, encoding, fragmentation, or another agent.
-
-## Optional profiles
-
-```bash
-codex --profile cpo-daily
-codex --profile cpo-terra
-codex --profile cpo-quality
-codex --profile cpo-ultra
-```
+A safety/scope block is checkpointed and is not retried through euphemism, rewording, encoding, fragmentation, obfuscation, or another agent.
 
 ## Update
 
 ```bash
 git pull
 bash install.sh
+bash scripts/doctor.sh user
 ```
